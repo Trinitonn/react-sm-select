@@ -85,6 +85,7 @@ export class MultiSelect extends React.Component {
     this.headerRef = React.createRef();
     this.searchRef = React.createRef();
     this.hasListener = false;
+    this.mouseIsHover = false;
   }
 
   componentDidUpdate(pp, ps) {
@@ -137,8 +138,10 @@ export class MultiSelect extends React.Component {
    */
   handleDocumentClick = event => {
     if (this.props.disabled) return;
+  
+    var eventPath = u.eventPath(event);
 
-    if (!u.eventPath(event).includes(this.multiSelectRef.current)) {
+    if ((eventPath === 'undefined' && !this.isSingle() && !this.mouseIsHover) || (eventPath !== 'undefined' && !eventPath.includes(this.multiSelectRef.current))) {
       this.setState({ expanded: false, hasFocus: false });
       u.removeDocumentClickListener(this.handleDocumentClick);
       this.onEvent('onBlur');
@@ -191,6 +194,7 @@ export class MultiSelect extends React.Component {
    * @param expanded Boolean
    */
   handleHover = expanded => {
+    this.mouseIsHover = expanded;
     if (this.props.shouldToggleOnHover) this.toggleDropDown(null, expanded);
   };
 

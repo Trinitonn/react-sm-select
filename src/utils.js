@@ -91,6 +91,9 @@ export const stopPreventPropagation = event => {
  */
 export const eventPath = event => {
   const inPath = (event.composedPath && event.composedPath()) || event.path;
+
+  if (typeof inPath === 'undefined') return 'undefined'; // ie/edge
+
   const target = event.target;
 
   if (inPath != null) return (inPath.indexOf(window) < 0) ? inPath.concat(window) : inPath; // safari
